@@ -23,8 +23,8 @@ export default function Home() {
       const sellTokenAddress = getMintAddress(selectedSell)
       const buyTokenAddress = getMintAddress(selectedBuy)
       const amount = sellAmount
-
-      const tx = await swap(sellTokenAddress, buyTokenAddress, amount, wallet)
+      const tx = await swap(sellTokenAddress, buyTokenAddress, amount, tolerance * 100, wallet)
+      console.log("Tx =>", tx)
     } catch (err) {
       console.error("err: ", err)
     }

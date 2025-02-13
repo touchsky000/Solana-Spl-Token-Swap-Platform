@@ -107,11 +107,12 @@ export const swap = async (
     tokenA,
     tokenB,
     fixamount,
+    slippage,
     wallet
 ) => {
     const anchorWallet = wallet;
     const connection = rpc_connection();
-    let slippageBps = 50;
+    let slippageBps = slippage;
     let success = false;
     const amount = fixamount * LAMPORTS_PER_SOL
 

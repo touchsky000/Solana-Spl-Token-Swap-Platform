@@ -1,35 +1,61 @@
 'use client'
 
+import axios from "axios"
 import TokenSelector from "@/components/TokenSelector";
 import WalletButton from "@/components/WalletButton";
 import { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa6";
-import { getMintAddress, swap } from "@/anchor";
+import { getDecimal, getMintAddress, swap } from "@/anchor";
 import { useWallet, useConnection, useAnchorWallet } from "@solana/wallet-adapter-react"
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
 export default function Home() {
   const [selectedNetwork, setSelectedNetwork] = useState('Solana');
   const [selectedBuy, setSelectedBuy] = useState('SOL');
   const [selectedSell, setSelectedSell] = useState('SOL');
   const [sellAmount, setSellAmount] = useState(5);
-  const [buyAmount, setBuyAmount] = useState(5);
+  const [buyAmount, setBuyAmount] = useState(0);
   const [tolerance, setTolerance] = useState(0.1);
   const [CustomTolerance, setCustomTolerance] = useState("Custom");
   const wallet = useAnchorWallet()
 
   const handleSwap = async () => {
     try {
-
       const sellTokenAddress = getMintAddress(selectedSell)
       const buyTokenAddress = getMintAddress(selectedBuy)
       const amount = sellAmount
-      const tx = await swap(sellTokenAddress, buyTokenAddress, amount, tolerance * 100, wallet)
+      const decimal = await getDecimal(sellTokenAddress)
+      const tx = await swap(sellTokenAddress, buyTokenAddress, amount, tolerance * 100, decimal, wallet)
       console.log("Tx =>", tx)
     } catch (err) {
-      console.error("err: ", err)
+    }
+  }
+
+  useEffect(() => {
+    const getEstimatedTokenAmount = async () => {
+      try {
+        const sellTokenAddress = getMintAddress(selectedSell)
+        const buyTokenAddress = getMintAddress(selectedBuy)
+        const amount = sellAmount
+        const sellTokenDecimal = await getDecimal(sellTokenAddress)
+        const buyTokenDecimal = await getDecimal(buyTokenAddress)
+        if (sellTokenAddress == buyTokenAddress) {
+          setBuyAmount(0)
+          console.log("Can not estimated")
+          return
+        }
+        const response = await axios.get(
+          `https://quote-api.jup.ag/v6/quote?inputMint=${sellTokenAddress}&outputMint=${buyTokenAddress}&amount=${amount * (10 ** sellTokenDecimal)}&slippageBps=${tolerance * 100}`
+        );
+        const estimatedAmount = response.data.outAmount / (10 ** buyTokenDecimal)
+        setBuyAmount(estimatedAmount)
+      } catch (err) {
+        setBuyAmount(0)
+      }
     }
 
-  }
+    getEstimatedTokenAmount()
+  }, [selectedBuy, selectedSell, sellAmount, tolerance])
 
   return (
     <main className="flex flex-col items-center mt-[70px] font-display -z-10 mb-[95px]">

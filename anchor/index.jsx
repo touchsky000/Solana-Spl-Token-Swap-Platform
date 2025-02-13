@@ -1,14 +1,17 @@
 "use client"
 import axios from "axios"
 import {
+    PublicKey,
     Keypair,
     Connection,
     Transaction,
     ComputeBudgetProgram,
     LAMPORTS_PER_SOL,
-    VersionedTransaction
+    VersionedTransaction,
+
 } from "@solana/web3.js";
 import * as anchor from "@coral-xyz/anchor";
+import { getMint } from "@solana/spl-token";
 import dotenv from 'dotenv';
 import bs58 from 'bs58';
 import { swapList } from "../constant/index"
@@ -108,13 +111,14 @@ export const swap = async (
     tokenB,
     fixamount,
     slippage,
+    decimal,
     wallet
 ) => {
     const anchorWallet = wallet;
     const connection = rpc_connection();
     let slippageBps = slippage;
     let success = false;
-    const amount = fixamount * LAMPORTS_PER_SOL
+    const amount = fixamount * (10 ** decimal)
 
     console.log(`Swapping ${amount} of ${tokenA} for ${tokenB}...`);
     // Get Route for swap
@@ -149,3 +153,23 @@ export const swap = async (
 export const getMintAddress = (tokenId) => {
     return swapList.find(item => item.id == tokenId)?.address
 }
+
+export const getDecimal = async (mintAddress) => {
+    try {
+        const connection = rpc_connection();
+        const mintPublicKey = new PublicKey(mintAddress);
+        const mintInfo = await getMint(connection, mintPublicKey);
+
+        if (!mintInfo) {
+            console.error(`Could not fetch mint info for address: ${mintAddress}`);
+            return null; // Or throw an error, depending on your use case
+        }
+
+        const decimals = mintInfo.decimals;
+        return decimals;
+
+    } catch (error) {
+        console.error("Error fetching decimals:", error);
+        return null;  // Or throw an error
+    }
+};

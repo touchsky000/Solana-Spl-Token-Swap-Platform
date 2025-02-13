@@ -8,10 +8,10 @@ const TokenSelector = ({ type, selectedToken, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative w-[180px]">
+    <div className="relative min-w-[140px] w-[180px]">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-textWhiteButton border-borderHeader w-full h-12 flex justify-between items-center px-5 rounded-lg border hover:bg-opacity-90"
+        className="flex items-center justify-between w-full h-12 px-5 border rounded-lg bg-textWhiteButton border-borderHeader hover:bg-opacity-90"
       >
         <div className="flex items-center gap-2">
           <Image
@@ -21,12 +21,12 @@ const TokenSelector = ({ type, selectedToken, onSelect }) => {
             height={24}
             className="w-6 h-6"
           />
-          <span className="text-textMain text-base font-semibold tracking-wide">{selectedToken}</span>
+          <span className="text-base font-semibold tracking-wide text-textMain">{selectedToken}</span>
         </div>
         <FaChevronDown size={20} color="white" className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       {isOpen && (
-        <div className="border-borderHeader w-full absolute z-50 mt-1 bg-black rounded-lg border">
+        <div className="absolute z-50 w-full mt-1 bg-black border rounded-lg border-borderHeader">
           {type === 'networks' ? networks.map(({ name }) => (
             <button
               key={name}
@@ -34,7 +34,7 @@ const TokenSelector = ({ type, selectedToken, onSelect }) => {
                 onSelect(name);
                 setIsOpen(false);
               }}
-              className="w-full flex items-center gap-2 px-5 py-3 hover:bg-borderHeader hover:rounded-lg"
+              className="flex items-center w-full gap-2 px-5 py-3 hover:bg-borderHeader hover:rounded-lg"
             >
               <Image
                 src={`/${name}.png`}
@@ -43,7 +43,7 @@ const TokenSelector = ({ type, selectedToken, onSelect }) => {
                 height={24}
                 className="w-6 h-6"
               />
-              <span className="text-textFooterTitle font-semibold">{name}</span>
+              <span className="font-semibold text-textFooterTitle">{name}</span>
             </button>
           )) : swapList.map(({ name }) => (
             <button
@@ -52,7 +52,7 @@ const TokenSelector = ({ type, selectedToken, onSelect }) => {
                 onSelect(name);
                 setIsOpen(false);
               }}
-              className="w-full flex items-center gap-2 px-5 py-3 hover:bg-borderHeader hover:rounded-lg"
+              className="flex items-center w-full gap-2 px-5 py-3 hover:bg-borderHeader hover:rounded-lg"
             >
               <Image
                 src={`/${name}.png`}
@@ -61,7 +61,7 @@ const TokenSelector = ({ type, selectedToken, onSelect }) => {
                 height={24}
                 className="w-6 h-6"
               />
-              <span className="text-textFooterTitle font-semibold">{name}</span>
+              <span className="font-semibold text-textFooterTitle">{name}</span>
             </button>
           ))}
         </div>

@@ -23,6 +23,13 @@ export default function Home() {
     try {
       const sellTokenAddress = getMintAddress(selectedSell)
       const buyTokenAddress = getMintAddress(selectedBuy)
+
+      if (sellTokenAddress == buyTokenAddress) {
+        setBuyAmount(0)
+        console.log("Can not estimated")
+        return
+      }
+      
       const amount = sellAmount
       const decimal = await getDecimal(sellTokenAddress)
       const tx = await swap(sellTokenAddress, buyTokenAddress, amount, tolerance * 100, decimal, wallet)
@@ -95,7 +102,7 @@ export default function Home() {
               <div className="flex gap-3">
                 <input
                   value={buyAmount}
-                  onChange={(e) => setBuyAmount(parseFloat(e.target.value))}
+                  disabled={true}
                   className="border-borderHeader text-bgWallet h-[48px] w-[250px] overflow-hidden px-4 text-base font-semibold bg-black rounded-lg  border focus:outline-none"
                 />
                 <TokenSelector

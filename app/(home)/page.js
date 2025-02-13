@@ -29,7 +29,7 @@ export default function Home() {
         console.log("Can not estimated")
         return
       }
-      
+
       const amount = sellAmount
       const decimal = await getDecimal(sellTokenAddress)
       const tx = await swap(sellTokenAddress, buyTokenAddress, amount, tolerance * 100, decimal, wallet)
@@ -47,8 +47,7 @@ export default function Home() {
         const sellTokenDecimal = await getDecimal(sellTokenAddress)
         const buyTokenDecimal = await getDecimal(buyTokenAddress)
         if (sellTokenAddress == buyTokenAddress) {
-          setBuyAmount(0)
-          console.log("Can not estimated")
+          setBuyAmount("Can not estimated")
           return
         }
         const response = await axios.get(
@@ -57,7 +56,7 @@ export default function Home() {
         const estimatedAmount = response.data.outAmount / (10 ** buyTokenDecimal)
         setBuyAmount(estimatedAmount)
       } catch (err) {
-        setBuyAmount(0)
+        setBuyAmount("Can not estimated")
       }
     }
 
@@ -103,7 +102,7 @@ export default function Home() {
                 <input
                   value={buyAmount}
                   disabled={true}
-                  className="border-borderHeader text-bgWallet h-[48px] w-[250px] overflow-hidden px-4 text-base font-semibold bg-black rounded-lg  border focus:outline-none"
+                  className="border-borderHeader text-gray h-[48px] w-[250px] overflow-hidden px-4 text-base font-semibold bg-black rounded-lg  border focus:outline-none"
                 />
                 <TokenSelector
                   type="tokens"

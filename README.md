@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Solana Spl-Token Swap Platform
 
 ## Getting Started
 
@@ -13,6 +13,8 @@ pnpm dev
 # or
 bun dev
 ```
+
+<img src = "./readme/difhigh_project_2.gif"/>
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
